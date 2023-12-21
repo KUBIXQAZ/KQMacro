@@ -27,6 +27,7 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
                 <RowDefinition Height="5*"/>
             </Grid.RowDefinitions>
             <Button Grid.Column="0"
@@ -44,6 +45,52 @@
                     Foreground="white"
                     Content="Stop Recording"
                     Click="StopRecording">
+            </Button>
+            <Grid Grid.Row="1"
+                  Grid.Column="0"
+                  Grid.ColumnSpan="2"
+                  x:Name="StepTypeGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0"
+                        BorderBrush="DarkGray"
+                        BorderThickness="1"
+                        Background="Gray"
+                        FontSize="10"
+                        Foreground="white"
+                        Content="LeftClick"
+                        Click="ChangeStepType">
+                </Button>
+                <Button Grid.Column="1"
+                        BorderBrush="DarkGray"
+                        BorderThickness="1"
+                        Background="gray"
+                        FontSize="10"
+                        Foreground="white"
+                        Content="RightClick"
+                        Click="ChangeStepType">
+                </Button>
+                <Button Grid.Column="2"
+                        BorderBrush="DarkGray"
+                        BorderThickness="1"
+                        Background="gray"
+                        FontSize="10"
+                        Foreground="white"
+                        Content="TypeText"
+                        Click="ChangeStepType">
+                </Button>
+            </Grid>
+            <Button Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="2"
+                    Background="green"
+                    FontSize="50"
+                    Foreground="white"
+                    Content="Play [Press F6]"
+                    Click="PlayMacro">
             </Button>
         </Grid>
     </Grid>
