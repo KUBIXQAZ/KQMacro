@@ -11,6 +11,7 @@ using System.Threading;
 using System.Windows.Controls;
 using System.Linq;
 using System.Text;
+using KQMacro.Custom;
 
 namespace KQMacro
 {
@@ -19,7 +20,7 @@ namespace KQMacro
         LeftClick,
         RightClick,
         TypeText,
-        //ClickButton
+        ClickButton
     }
 
     class Step
@@ -55,6 +56,32 @@ namespace KQMacro
             UpdateStepType();
         }
 
+        public Key ChooseKey()
+        {
+            var options = new string[] { "Esc", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12",
+                                          "Print Screen", "Scroll Lock", "Pause/Break", "Insert", "Home", "Page Up",
+                                          "`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Backspace",
+                                          "Num Lock", "/", "*", "-",
+                                          "Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", "\\",
+                                          "7 (Num Pad)", "8 (Num Pad)", "9 (Num Pad)", "+",
+                                          "Caps Lock", "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", "Enter",
+                                          "4 (Num Pad)", "5 (Num Pad)", "6 (Num Pad)",
+                                          "Shift", "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/", "Shift",
+                                          "1 (Num Pad)", "2 (Num Pad)", "3 (Num Pad)", "Enter",
+                                          "Ctrl", "Win", "Alt", "Spacebar", "Alt", "Win", "Menu", "Ctrl",
+                                          "0 (Num Pad)", ". (Num Pad)" };
+            var customMessageBox = new CustomMessageBox(options);
+
+            Key key = Key.None;
+            if (customMessageBox.ShowDialog() == true)
+            {
+                var selectedOption = customMessageBox.SelectedOption;
+                Console.WriteLine($"selected option {selectedOption}");
+                Enum.TryParse(selectedOption, out key);
+            }
+            return key;
+        }
+
         private async Task Check()
         {
             bool CheckKey = true;
@@ -67,12 +94,14 @@ namespace KQMacro
                     System.Drawing.Point NewPoint = System.Windows.Forms.Cursor.Position;
 
                     string Text = (StepType == StepType.TypeText) ? Microsoft.VisualBasic.Interaction.InputBox("Type in text: ", "Input") : null;
+                    Key Key = (StepType == StepType.ClickButton) ? ChooseKey() : Key.None;
 
                     Step NewStep = new Step
                     {
-                        Point = (StepType == StepType.TypeText ? new System.Drawing.Point(-1,-1) : NewPoint),
+                        Point = (StepType == StepType.TypeText || StepType == StepType.ClickButton ? new System.Drawing.Point(-1,-1) : NewPoint),
                         StepType = StepType,
                         Text = Text,
+                        Button = Key
                     };
 
                     steps.Add(NewStep);
@@ -91,7 +120,7 @@ namespace KQMacro
             int i = 1;
             foreach (Step step in steps)
             {
-                PointsList.Items.Add($"Step {i}: {step.Point} , {step.StepType} {(step.Text != null ? $", Text: {step.Text}" : "")}");
+                PointsList.Items.Add($"Step {i}: {step.Point} , {step.StepType} {(step.Text != null ? $", Text: {step.Text}" : "")} {(step.Button != Key.None ? $" Key: {step.Button}" : "")}");
                 i++;
             }
         }
@@ -116,8 +145,11 @@ namespace KQMacro
                     if(step.StepType == StepType.TypeText)
                     {
                         SendKeys.SendWait(step.Text);
-                    }
-                    else if(step.StepType == StepType.LeftClick) 
+                    } else if(step.StepType == StepType.ClickButton)
+                    {
+                        string Key = "{"+step.Button+"}";
+                        SendKeys.SendWait(Key);
+                    } else if(step.StepType == StepType.LeftClick) 
                     {
                         System.Windows.Forms.Cursor.Position = step.Point;
 
@@ -134,6 +166,12 @@ namespace KQMacro
                     }
                 }
             }
+        }
+
+        public void Reset(object sender, RoutedEventArgs e)
+        {
+            steps.Clear();
+            UpdateList();
         }
 
         private void UpdateStepType()
