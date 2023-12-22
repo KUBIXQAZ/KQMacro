@@ -3,14 +3,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Collections.Generic;
 using System.Windows.Input;
-using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using System.Drawing;
 using System.Threading;
-using System.Windows.Controls;
 using System.Linq;
-using System.Text;
 using KQMacro.Custom;
 
 namespace KQMacro
@@ -29,6 +25,7 @@ namespace KQMacro
         public StepType StepType { get; set; }
         public string Text { get; set; }
         public Key Button { get; set; }
+        public int Delay { get; set; }
     }
 
     public partial class MainWindow : Window
@@ -43,6 +40,7 @@ namespace KQMacro
 
         bool Recording = false;
         StepType StepType = StepType.LeftClick;
+        int Loops = 1;
 
         const int MOUSEEVENTF_LEFTDOWN = 0x02;
         const int MOUSEEVENTF_LEFTUP = 0x04;
@@ -120,7 +118,7 @@ namespace KQMacro
             int i = 1;
             foreach (Step step in steps)
             {
-                PointsList.Items.Add($"Step {i}: {step.Point} , {step.StepType} {(step.Text != null ? $", Text: {step.Text}" : "")} {(step.Button != Key.None ? $" Key: {step.Button}" : "")}");
+                PointsList.Items.Add($"Step {i}: {step.Point} , {(step.Delay != 0 ? $"Delay: {step.Delay}ms" : $"{step.StepType}")} {(step.Text != null ? $", Text: {step.Text}" : "")} {(step.Button != Key.None ? $" Key: {step.Button}" : "")}");
                 i++;
             }
         }
@@ -140,29 +138,39 @@ namespace KQMacro
         {
             if(steps.Count != 0)
             {
-                foreach (Step step in steps)
+                for(int i = 0; i <  Loops; i++)
                 {
-                    if(step.StepType == StepType.TypeText)
+                    foreach (Step step in steps)
                     {
-                        SendKeys.SendWait(step.Text);
-                    } else if(step.StepType == StepType.ClickButton)
-                    {
-                        string Key = "{"+step.Button+"}";
-                        SendKeys.SendWait(Key);
-                    } else if(step.StepType == StepType.LeftClick) 
-                    {
-                        System.Windows.Forms.Cursor.Position = step.Point;
+                        if(step.Delay != 0)
+                        {
+                            Thread.Sleep(step.Delay);
+                        } 
+                        else if (step.StepType == StepType.TypeText)
+                        {
+                            SendKeys.SendWait(step.Text);
+                        }
+                        else if (step.StepType == StepType.ClickButton)
+                        {
+                            string Key = "{" + step.Button + "}";
+                            SendKeys.SendWait(Key);
+                        }
+                        else if (step.StepType == StepType.LeftClick)
+                        {
+                            System.Windows.Forms.Cursor.Position = step.Point;
 
-                        mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-                        Thread.Sleep(500);
-                        mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-                    } else if (step.StepType == StepType.RightClick)
-                    {
-                        System.Windows.Forms.Cursor.Position = step.Point;
+                            mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+                            Thread.Sleep(500);
+                            mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+                        }
+                        else if (step.StepType == StepType.RightClick)
+                        {
+                            System.Windows.Forms.Cursor.Position = step.Point;
 
-                        mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0);
-                        Thread.Sleep(500);
-                        mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
+                            mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0);
+                            Thread.Sleep(500);
+                            mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
+                        }
                     }
                 }
             }
@@ -201,6 +209,50 @@ namespace KQMacro
                 Console.WriteLine($"Selected StepType: {StepType}");
             }
             UpdateStepType();
+        }
+
+        private void ChangeLoopsNumber(object sender, RoutedEventArgs e)
+        {
+            var messageBox = new CustomNumberInputMessageBox("Type in number of loops:");
+            if (messageBox.ShowDialog() == true)
+            {
+                Loops = messageBox.selectedNumber;
+
+                LoopsText.Content = $"Loops: {Loops}";
+
+                Console.WriteLine($"Selected number of loops: {Loops}");
+            }
+        }
+        private void AddDelay(object sender, RoutedEventArgs e)
+        {
+            var messageBox = new CustomNumberInputMessageBox("Type in delay (ms):");
+            if(messageBox.ShowDialog() == true)
+            {
+                Step newStep = new Step
+                {
+                    Point = new System.Drawing.Point(-1,-1),
+                    Delay = messageBox.selectedNumber
+                };
+                steps.Add(newStep);
+                UpdateList();
+            }
+        }
+
+        private void PointsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var listings = PointsList.Items;
+            var listing = PointsList.SelectedItem.ToString();
+            int index = listings.IndexOf(listing);
+
+            if (steps[index].Delay != 0)
+            {
+                var messageBox = new CustomNumberInputMessageBox("Type in delay (ms):");
+                if (messageBox.ShowDialog() == true)
+                {
+                    steps[index].Delay = messageBox.selectedNumber;
+                    UpdateList();
+                }
+            }
         }
     }
 }
