@@ -288,28 +288,23 @@ namespace KQMacro
                 Console.WriteLine($"Selected number of loops: {Loops}");
             }
         }
-        private void AddDelay(object sender, RoutedEventArgs e)
-        {
-            var messageBox = new NumericEntryPopUp(Title, "Type in delay (ms):");
-            if(messageBox.ShowDialog() == true)
-            {
-                Step newStep = new Step
-                {
-                    Point = new System.Drawing.Point(-1,-1),
-                    Delay = messageBox.selectedNumber
-                };
-                steps.Add(newStep);
-                UpdateList();
-            }
-        }
 
-        private void AddDelay500ms(object sender, RoutedEventArgs e)
+        private void AddStepDelay(object sender, RoutedEventArgs e)
         {
-            Step newStep = new Step
+            var b = (System.Windows.Controls.Button)sender;
+
+            Step newStep = new Step();
+            int delay = 0;
+
+            if (b.Tag.ToString() == "Custom")
             {
-                Point = new System.Drawing.Point(-1, -1),
-                Delay = 500
-            };
+                var messageBox = new NumericEntryPopUp(Title, "Type in delay (ms):");
+                if (messageBox.ShowDialog() == true) delay = messageBox.selectedNumber;
+            }
+            else delay = int.Parse(b.Tag.ToString());
+
+            newStep.Point = new System.Drawing.Point(-1, -1);
+            newStep.Delay = delay;
             steps.Add(newStep);
             UpdateList();
         }
