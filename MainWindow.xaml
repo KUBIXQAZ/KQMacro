@@ -48,6 +48,7 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="5*"/>
+                <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <Button Grid.Column="0"
                     Grid.Row="0"
@@ -166,6 +167,22 @@
                     Foreground="white"
                     Content="Play/Stop [Press F6]"
                     Click="PlayMacroB">
+            </Button>
+            <Button Grid.Column="0"
+                    Grid.Row="6"
+                    Background="gray"
+                    FontSize="20"
+                    Foreground="white"
+                    Content="LOAD"
+                    Click="LoadMacroB">
+            </Button>
+            <Button Grid.Column="1"
+                    Grid.Row="6"
+                    Background="gray"
+                    FontSize="20"
+                    Foreground="white"
+                    Content="SAVE"
+                    Click="SaveMacroB">
             </Button>
         </Grid>
     </Grid>

@@ -8,10 +8,15 @@ using System.Runtime.InteropServices;
 using System.Linq;
 using KQMacro.Custom;
 using System.Windows.Controls;
+using System.Xml.Serialization;
+using System.IO;
+using System.Runtime.InteropServices.ComTypes;
+using System.Security.Cryptography;
+using System.Xml;
 
 namespace KQMacro
 {
-    enum StepType
+    public enum StepType
     {
         LeftClick,
         RightClick,
@@ -19,7 +24,8 @@ namespace KQMacro
         ClickButton
     }
 
-    class Step
+    [Serializable]
+    public class Step
     {
         public System.Drawing.Point Point { get; set; }
         public StepType StepType { get; set; }
@@ -349,6 +355,44 @@ namespace KQMacro
                 int index = listings.IndexOf(PointsList.SelectedItem);
                 steps.RemoveAt(index);
                 UpdateList();
+            }
+        }
+
+        private void LoadMacroB(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog();
+            dialog.DefaultExt = ".xml";
+            dialog.Filter = "XML Files (*.xml)|*.xml";
+            if(dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(List<Step>));
+                using(XmlReader reader = XmlReader.Create(dialog.FileName))
+                {
+                    steps = (List<Step>)serializer.Deserialize(reader);
+                    UpdateList();
+                }
+            }
+        }
+
+        private void SaveMacroB(object sender, RoutedEventArgs e)
+        {
+            if(steps.Count > 0)
+            {
+                var dialog = new SaveFileDialog();
+                dialog.DefaultExt = ".xml";
+                dialog.FileName = "new_macro";
+                dialog.Filter = "XML Files (*.xml)|*.xml";
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    string fileName = dialog.FileName;
+
+                    XmlSerializer serializer = new XmlSerializer(typeof(List<Step>));
+
+                    using (FileStream fileStream = new FileStream(fileName, FileMode.Create))
+                    {
+                        serializer.Serialize(fileStream, steps);
+                    }
+                }
             }
         }
     }
