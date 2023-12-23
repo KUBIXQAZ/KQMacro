@@ -134,7 +134,7 @@
                     FontSize="50"
                     Foreground="white"
                     Content="Play [Press F6]"
-                    Click="PlayMacro">
+                    Click="PlayMacroB">
             </Button>
         </Grid>
     </Grid>

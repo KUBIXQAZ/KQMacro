@@ -41,6 +41,8 @@ namespace KQMacro
         bool Recording = false;
         StepType StepType = StepType.LeftClick;
         int Loops = 1;
+        bool isMacroRunning = false;
+        bool cancelMacro = false;
 
         const int MOUSEEVENTF_LEFTDOWN = 0x02;
         const int MOUSEEVENTF_LEFTUP = 0x04;
@@ -52,6 +54,39 @@ namespace KQMacro
             InitializeComponent();
 
             UpdateStepType();
+
+            CheckForStartStop();
+        }
+
+        private async void CheckForStartStop()
+        {
+            bool check = true;
+            while (true)
+            {
+                if (Keyboard.IsKeyDown(Key.F6) && check)
+                {
+                    check = false;
+                    Console.WriteLine("Clicked f6");
+                    if (isMacroRunning == true)
+                    {
+                        cancelMacro = true;
+                    }
+                    else
+                    {
+                        cancelMacro = false;
+                        Console.WriteLine("1");
+                        PlayMacro();
+                        Console.WriteLine("2");
+                    }
+                    await Task.Delay(100);
+                }
+                else if (Keyboard.IsKeyUp(Key.F6) && !check)
+                {
+                    check = true;
+                    await Task.Delay(10);
+                }
+                await Task.Delay(10);
+            }
         }
 
         public Key ChooseKey()
@@ -134,18 +169,21 @@ namespace KQMacro
             Recording = false;
         }
 
-        private void PlayMacro(object sender, RoutedEventArgs e)
+        private async void PlayMacro()
         {
-            if(steps.Count != 0)
+            isMacroRunning = true;
+            if (steps.Count != 0)
             {
-                for(int i = 0; i <  Loops; i++)
+                for (int i = 0; i < Loops; i++)
                 {
                     foreach (Step step in steps)
                     {
-                        if(step.Delay != 0)
+                        if (cancelMacro == true) break;
+
+                        if (step.Delay != 0)
                         {
-                            Thread.Sleep(step.Delay);
-                        } 
+                            await Task.Delay(step.Delay);
+                        }
                         else if (step.StepType == StepType.TypeText)
                         {
                             SendKeys.SendWait(step.Text);
@@ -160,7 +198,7 @@ namespace KQMacro
                             System.Windows.Forms.Cursor.Position = step.Point;
 
                             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-                            Thread.Sleep(500);
+                            await Task.Delay(500);
                             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
                         }
                         else if (step.StepType == StepType.RightClick)
@@ -168,11 +206,24 @@ namespace KQMacro
                             System.Windows.Forms.Cursor.Position = step.Point;
 
                             mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0);
-                            Thread.Sleep(500);
+                            await Task.Delay(500);
                             mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
                         }
                     }
                 }
+            }
+            isMacroRunning = false;
+        }
+
+        private void PlayMacroB(object sender, RoutedEventArgs e)
+        {
+            if(isMacroRunning == true)
+            {
+                cancelMacro = true;
+            } else
+            {
+                cancelMacro = false;
+                PlayMacro();
             }
         }
 
@@ -241,16 +292,19 @@ namespace KQMacro
         private void PointsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var listings = PointsList.Items;
-            var listing = PointsList.SelectedItem.ToString();
-            int index = listings.IndexOf(listing);
-
-            if (steps[index].Delay != 0)
+            if (PointsList.SelectedItems.Count > 0)
             {
-                var messageBox = new CustomNumberInputMessageBox("Type in delay (ms):");
-                if (messageBox.ShowDialog() == true)
+                var listing = PointsList.SelectedItem.ToString();
+                int index = listings.IndexOf(listing);
+
+                if (steps[index].Delay != 0)
                 {
-                    steps[index].Delay = messageBox.selectedNumber;
-                    UpdateList();
+                    var messageBox = new CustomNumberInputMessageBox("Type in delay (ms):");
+                    if (messageBox.ShowDialog() == true)
+                    {
+                        steps[index].Delay = messageBox.selectedNumber;
+                        UpdateList();
+                    }
                 }
             }
         }
