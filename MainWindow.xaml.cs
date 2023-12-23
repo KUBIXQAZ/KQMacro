@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Linq;
 using KQMacro.Custom;
+using System.Windows.Controls;
 
 namespace KQMacro
 {
@@ -55,6 +56,8 @@ namespace KQMacro
             UpdateStepType();
 
             CheckForStartStop();
+
+            PointsList.SelectionChanged += SelectedItemInList;
         }
 
         private async void CheckForStartStop()
@@ -159,13 +162,19 @@ namespace KQMacro
 
         private async void StartRecording(object sender, RoutedEventArgs e)
         {
-            Recording = true;
-            await Check();
+            if(Recording == false)
+            {
+                Recording = true;
+                await Check();
+            }
         }
 
         private void StopRecording(object sender, RoutedEventArgs e)
         {
-            Recording = false;
+            if(Recording == true)
+            {
+                Recording = false;
+            }
         }
 
         private async void PlayMacro()
@@ -316,6 +325,30 @@ namespace KQMacro
                         UpdateList();
                     }
                 }
+            }
+        }
+
+        private void SelectedItemInList(object sender, SelectionChangedEventArgs e)
+        {
+            var listings = PointsList.Items;
+            if (PointsList.SelectedItems.Count > 0)
+            {
+                deleteButton.IsEnabled = true;
+            }
+            else
+            {
+                deleteButton.IsEnabled = false;
+            }
+        }
+
+        private void DeleteStep(object sender, RoutedEventArgs e)
+        {
+            var listings = PointsList.Items;
+            if (PointsList.SelectedItems.Count > 0)
+            {
+                int index = listings.IndexOf(PointsList.SelectedItem);
+                steps.RemoveAt(index);
+                UpdateList();
             }
         }
     }

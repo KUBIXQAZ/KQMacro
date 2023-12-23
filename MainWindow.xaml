@@ -16,12 +16,25 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <ListBox Grid.Column="0"
-                 Grid.Row="0"
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <ListBox Grid.Row="0"
                  Name="PointsList" 
                  Background="LightGray"
                  MouseDoubleClick="PointsList_MouseDoubleClick">
-        </ListBox>
+            </ListBox>
+            <Button Grid.Row="1"
+                    Content="Delete"
+                    Background="Red"
+                    Foreground="white"
+                    FontSize="20"
+                    IsEnabled="False"
+                    Name="deleteButton"
+                    Click="DeleteStep"></Button>
+        </Grid>
         <Grid Grid.Column="1"
               Grid.Row="0">
             <Grid.ColumnDefinitions>
