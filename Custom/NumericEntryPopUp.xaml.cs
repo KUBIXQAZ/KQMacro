@@ -4,25 +4,26 @@ using System.Text.RegularExpressions;
  
 namespace KQMacro.Custom
 {
-    public partial class CustomNumberInputMessageBox : Window
+    public partial class NumericEntryPopUp : Window
     {
         public int selectedNumber;
-        public CustomNumberInputMessageBox(string _title)
+        public NumericEntryPopUp(string windowTitle, string content)
         {
             InitializeComponent();
 
-            title.Text = _title;
+            Title = windowTitle;
+            title.Text = content;
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("^0*([1-9][0-9]*)?$");
+            Regex regex = new Regex("^[0-9]+$");
             e.Handled = !regex.IsMatch(e.Text);
         }
 
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
-            selectedNumber = int.Parse(UserInput.Text);
+            selectedNumber = int.Parse(textBox.Text);
             if (selectedNumber == 0) selectedNumber = 1;
             DialogResult = true;
             Close();

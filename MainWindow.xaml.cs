@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Windows.Input;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Linq;
 using KQMacro.Custom;
 
@@ -31,7 +30,7 @@ namespace KQMacro
     public partial class MainWindow : Window
     {
         [DllImport("user32.dll")]
-        private static extern bool GetCursorPos(out System.Windows.Point lpPoint);
+        private static extern bool GetCursorPos(out Point lpPoint);
 
         [DllImport("user32.dll")]
         public static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
@@ -103,7 +102,7 @@ namespace KQMacro
                                           "1 (Num Pad)", "2 (Num Pad)", "3 (Num Pad)", "Enter",
                                           "Ctrl", "Win", "Alt", "Spacebar", "Alt", "Win", "Menu", "Ctrl",
                                           "0 (Num Pad)", ". (Num Pad)" };
-            var customMessageBox = new CustomMessageBox(options);
+            var customMessageBox = new ComboBoxPopUp(Title, "Choose key:",options);
 
             Key key = Key.None;
             if (customMessageBox.ShowDialog() == true)
@@ -264,7 +263,7 @@ namespace KQMacro
 
         private void ChangeLoopsNumber(object sender, RoutedEventArgs e)
         {
-            var messageBox = new CustomNumberInputMessageBox("Type in number of loops:");
+            var messageBox = new NumericEntryPopUp(Title, "Type in number of loops:");
             if (messageBox.ShowDialog() == true)
             {
                 Loops = messageBox.selectedNumber;
@@ -276,7 +275,7 @@ namespace KQMacro
         }
         private void AddDelay(object sender, RoutedEventArgs e)
         {
-            var messageBox = new CustomNumberInputMessageBox("Type in delay (ms):");
+            var messageBox = new NumericEntryPopUp(Title, "Type in delay (ms):");
             if(messageBox.ShowDialog() == true)
             {
                 Step newStep = new Step
@@ -289,6 +288,17 @@ namespace KQMacro
             }
         }
 
+        private void AddDelay500ms(object sender, RoutedEventArgs e)
+        {
+            Step newStep = new Step
+            {
+                Point = new System.Drawing.Point(-1, -1),
+                Delay = 500
+            };
+            steps.Add(newStep);
+            UpdateList();
+        }
+
         private void PointsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var listings = PointsList.Items;
@@ -299,7 +309,7 @@ namespace KQMacro
 
                 if (steps[index].Delay != 0)
                 {
-                    var messageBox = new CustomNumberInputMessageBox("Type in delay (ms):");
+                    var messageBox = new NumericEntryPopUp(Title, "Type in delay (ms):");
                     if (messageBox.ShowDialog() == true)
                     {
                         steps[index].Delay = messageBox.selectedNumber;
