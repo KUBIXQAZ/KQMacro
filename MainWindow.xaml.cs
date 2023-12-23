@@ -10,8 +10,6 @@ using KQMacro.Custom;
 using System.Windows.Controls;
 using System.Xml.Serialization;
 using System.IO;
-using System.Runtime.InteropServices.ComTypes;
-using System.Security.Cryptography;
 using System.Xml;
 
 namespace KQMacro
@@ -24,7 +22,6 @@ namespace KQMacro
         ClickButton
     }
 
-    [Serializable]
     public class Step
     {
         public System.Drawing.Point Point { get; set; }
@@ -32,6 +29,13 @@ namespace KQMacro
         public string Text { get; set; }
         public Key Button { get; set; }
         public int Delay { get; set; }
+    }
+
+    [Serializable]
+    public class Macro
+    {
+        public List<Step> Steps { get; set; }
+        public int Loops { get; set; }
     }
 
     public partial class MainWindow : Window
@@ -49,6 +53,7 @@ namespace KQMacro
         int Loops = 1;
         bool isMacroRunning = false;
         bool cancelMacro = false;
+        Macro macro;
 
         const int MOUSEEVENTF_LEFTDOWN = 0x02;
         const int MOUSEEVENTF_LEFTUP = 0x04;
@@ -64,6 +69,8 @@ namespace KQMacro
             CheckForStartStop();
 
             PointsList.SelectionChanged += SelectedItemInList;
+
+            macro =  new Macro();
         }
 
         private async void CheckForStartStop()
@@ -360,10 +367,13 @@ namespace KQMacro
             dialog.Filter = "XML Files (*.xml)|*.xml";
             if(dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(List<Step>));
+                XmlSerializer serializer = new XmlSerializer(typeof(Macro));
                 using(XmlReader reader = XmlReader.Create(dialog.FileName))
                 {
-                    steps = (List<Step>)serializer.Deserialize(reader);
+                    macro = (Macro)serializer.Deserialize(reader);
+                    steps = macro.Steps;
+                    Loops = macro.Loops;
+                    LoopsText.Content = $"Loops: {Loops}";
                     UpdateList();
                 }
             }
@@ -381,11 +391,13 @@ namespace KQMacro
                 {
                     string fileName = dialog.FileName;
 
-                    XmlSerializer serializer = new XmlSerializer(typeof(List<Step>));
+                    XmlSerializer serializer = new XmlSerializer(typeof(Macro));
 
                     using (FileStream fileStream = new FileStream(fileName, FileMode.Create))
                     {
-                        serializer.Serialize(fileStream, steps);
+                        macro.Steps = steps;
+                        macro.Loops = Loops;
+                        serializer.Serialize(fileStream, macro);
                     }
                 }
             }
