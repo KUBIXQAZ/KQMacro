@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Xml.Serialization;
 using System.IO;
 using System.Xml;
+using System.Windows.Media;
 
 namespace KQMacro
 {
@@ -37,11 +38,11 @@ namespace KQMacro
         public List<Step> Steps { get; set; }
         public int Loops { get; set; }
     }
-
+    
     public partial class MainWindow : Window
     {
         [DllImport("user32.dll")]
-        private static extern bool GetCursorPos(out Point lpPoint);
+        private static extern bool GetCursorPos(out System.Drawing.Point lpPoint);
 
         [DllImport("user32.dll")]
         public static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
@@ -262,10 +263,10 @@ namespace KQMacro
                 {
                     if (ButtonStepType == StepType)
                     {
-                        b.Background = System.Windows.Media.Brushes.DarkGray;
+                        b.Background = (Brush)new BrushConverter().ConvertFromString("#383838");
                     } else
                     {
-                        b.Background = System.Windows.Media.Brushes.Gray;
+                        b.Background = (Brush)new BrushConverter().ConvertFromString("#242424");
                     }
                 }
             }

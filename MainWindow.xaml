@@ -7,12 +7,12 @@
         mc:Ignorable="d"
         Title="KQMacro" 
         Height="450" 
-        Width="800"
+        Width="850"
         ResizeMode="CanMinimize">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -22,19 +22,21 @@
                 <RowDefinition Height="10*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            <ListBox Grid.Row="0"
-                 Name="PointsList" 
-                 Background="LightGray"
-                 MouseDoubleClick="PointsList_MouseDoubleClick">
-            </ListBox>
+            <ListView Grid.Row="0"
+                     Name="PointsList" 
+                     Background="#242424"
+                     Foreground="white"
+                     MouseDoubleClick="PointsList_MouseDoubleClick">
+            </ListView>
             <Button Grid.Row="1"
                     Content="Delete"
-                    Background="Red"
+                    Background="#242424"
                     Foreground="white"
-                    FontSize="20"
+                    FontSize="23"
                     IsEnabled="False"
                     Name="deleteButton"
-                    Click="DeleteStep"></Button>
+                    Click="DeleteStep">
+            </Button>
         </Grid>
         <Grid Grid.Column="1"
               Grid.Row="0">
@@ -48,21 +50,21 @@
                 <RowDefinition Height="2*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
-                <RowDefinition Height="4*"/>
+                <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <Button Grid.Column="0"
                     Grid.Row="0"
-                    Background="Blue"
-                    FontSize="10"
+                    Background="#242424"
+                    FontSize="14"
                     Foreground="white"
                     Content="Start Recording [Press H to add step]"
                     Click="StartRecording">
             </Button>
             <Button Grid.Column="1"
                     Grid.Row="0"
-                    Background="Red"
-                    FontSize="10"
+                    Background="#242424"
+                    FontSize="14"
                     Foreground="white"
                     Content="Stop Recording"
                     Click="StopRecording">
@@ -78,37 +80,29 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0"
-                        BorderBrush="DarkGray"
-                        BorderThickness="1"
-                        Background="Gray"
-                        FontSize="10"
+                        Background="#242424"
+                        FontSize="16"
                         Foreground="white"
                         Content="LeftClick"
                         Click="ChangeStepType">
                 </Button>
                 <Button Grid.Column="1"
-                        BorderBrush="DarkGray"
-                        BorderThickness="1"
-                        Background="gray"
-                        FontSize="10"
+                        Background="#242424"
+                        FontSize="16"
                         Foreground="white"
                         Content="RightClick"
                         Click="ChangeStepType">
                 </Button>
                 <Button Grid.Column="2"
-                        BorderBrush="DarkGray"
-                        BorderThickness="1"
-                        Background="gray"
-                        FontSize="10"
+                        Background="#242424"
+                        FontSize="16"
                         Foreground="white"
                         Content="TypeText"
                         Click="ChangeStepType">
                 </Button>
                 <Button Grid.Column="3"
-                        BorderBrush="DarkGray"
-                        BorderThickness="1"
-                        Background="gray"
-                        FontSize="10"
+                        Background="#242424"
+                        FontSize="16"
                         Foreground="white"
                         Content="ClickButton"
                         Click="ChangeStepType">
@@ -129,30 +123,26 @@
                 <Label Grid.Row="0"
                        Grid.Column="0"
                        Grid.ColumnSpan="3"
-                       Background="Gray"
+                       Background="#242424"
                        Content="Add Delay"
                        HorizontalContentAlignment="Center"
                        VerticalContentAlignment="Center"
-                       FontSize="20"
+                       FontSize="23"
                        Foreground="White">
                 </Label>
                 <Button Grid.Column="0"
                         Grid.Row="1"
-                        Background="gray"
-                        BorderThickness="1"
-                        BorderBrush="DarkGray"
-                        FontSize="20"
+                        Background="#242424"
+                        FontSize="23"
                         Foreground="white"
                         Content="500ms"
-                         Tag="500"
+                        Tag="500"
                         Click="AddStepDelay">
                 </Button>
                 <Button Grid.Column="1"
                         Grid.Row="1"
-                        Background="gray"
-                        BorderThickness="1"
-                        BorderBrush="DarkGray"
-                        FontSize="20"
+                        Background="#242424"
+                        FontSize="23"
                         Foreground="white"
                         Content="1000ms"
                         Tag="1000"
@@ -160,31 +150,19 @@
                 </Button>
                 <Button Grid.Column="2"
                         Grid.Row="1"
-                        Background="gray"
-                        BorderThickness="1"
-                        BorderBrush="DarkGray"
-                        FontSize="20"
+                        Background="#242424"
+                        FontSize="23"
                         Foreground="white"
                         Content="Custom"
                         Tag="Custom"
                         Click="AddStepDelay">
                 </Button>
             </Grid>
-            
             <Button Grid.Column="0"
                     Grid.ColumnSpan="2"
                     Grid.Row="3"
-                    Background="Red"
-                    FontSize="20"
-                    Foreground="white"
-                    Content="Reset"
-                    Click="Reset">
-            </Button>
-            <Button Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Grid.Row="4"
-                    Background="gray"
-                    FontSize="20"
+                    Background="#242424"
+                    FontSize="23"
                     Foreground="white"
                     Content="Loops: 1"
                     x:Name="LoopsText"
@@ -192,27 +170,36 @@
             </Button>
             <Button Grid.Column="0"
                     Grid.ColumnSpan="2"
-                    Grid.Row="5"
-                    Background="green"
-                    FontSize="40"
+                    Grid.Row="4"
+                    Background="#242424"
+                    FontSize="23"
                     Foreground="white"
                     Content="Play/Stop [Press F6]"
                     Click="PlayMacroB">
             </Button>
             <Button Grid.Column="0"
-                    Grid.Row="6"
-                    Background="gray"
-                    FontSize="20"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="5"
+                    Background="#242424"
+                    FontSize="23"
                     Foreground="white"
-                    Content="LOAD"
+                    Content="Reset"
+                    Click="Reset">
+            </Button>
+            <Button Grid.Column="0"
+                    Grid.Row="6"
+                    Background="#242424"
+                    FontSize="23"
+                    Foreground="white"
+                    Content="Load"
                     Click="LoadMacroB">
             </Button>
             <Button Grid.Column="1"
                     Grid.Row="6"
-                    Background="gray"
-                    FontSize="20"
+                    Background="#242424"
+                    FontSize="23"
                     Foreground="white"
-                    Content="SAVE"
+                    Content="Save"
                     Click="SaveMacroB">
             </Button>
         </Grid>
