@@ -79,9 +79,11 @@ namespace KQMacro
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(bool));
 
-                string fileName = "settings.xml";
+                string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                string myAppFolder = Path.Combine(appDataPath, "KQMacro");
+                string filePath = Path.Combine(myAppFolder, "settings.xml");
 
-                using (FileStream fileStream = new FileStream(fileName, FileMode.Open))
+                using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
                 {
                     instruction = (bool)serializer.Deserialize(fileStream);
                 }
@@ -93,14 +95,21 @@ namespace KQMacro
         public void ShowInstruction(object sender, RoutedEventArgs e)
         {
             System.Windows.MessageBox.Show("To begin recording, click the 'Start Recording' button. Press the 'H' key to add a new step. You can choose the type of step, such as left-click, right-click, type text, or click a button. To delete a step, click on it in the list and use the 'Delete' button. Additionally, for delay steps, you can double-click on them in the list to edit the delay duration. You can specify delays between actions and set the number of times you want the actions to be repeated by clicking on the 'Loops' button. To start and stop the macro, use the F6 key. There's also a reset button to clear all actions from the macro. Save and load your macros to/from a file for convenience.", "Info",MessageBoxButton.OK);
-            instruction = true;
-            XmlSerializer serializer = new XmlSerializer(typeof(bool));
-
-            string fileName = "settings.xml";
-
-            using (FileStream fileStream = new FileStream(fileName, FileMode.Create))
+            if(instruction != true)
             {
-                serializer.Serialize(fileStream, instruction);
+                instruction = true;
+                XmlSerializer serializer = new XmlSerializer(typeof(bool));
+
+                string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                string myAppFolder = Path.Combine(appDataPath, "KQMacro");
+                string filePath = Path.Combine(myAppFolder, "settings.xml");
+
+                if(!Directory.Exists(myAppFolder)) Directory.CreateDirectory(myAppFolder);
+
+                using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    serializer.Serialize(fileStream, instruction);
+                }
             }
         }   
 
