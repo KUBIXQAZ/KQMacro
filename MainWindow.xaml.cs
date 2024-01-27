@@ -12,8 +12,6 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Xml;
 using System.Windows.Media;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-using System.Runtime.InteropServices.ComTypes;
 
 namespace KQMacro
 {
@@ -30,7 +28,7 @@ namespace KQMacro
         public System.Drawing.Point Point { get; set; }
         public StepType StepType { get; set; }
         public string Text { get; set; }
-        public Key Button { get; set; }
+        public String Button { get; set; }
         public int Delay { get; set; }
     }
 
@@ -144,28 +142,221 @@ namespace KQMacro
             }
         }
 
-        public Key ChooseKey()
+        public string ChooseKey()
         {
-            var options = new string[] { "Esc", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12",
-                                          "Print Screen", "Scroll Lock", "Pause/Break", "Insert", "Home", "Page Up",
-                                          "`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Backspace",
-                                          "Num Lock", "/", "*", "-",
-                                          "Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", "\\",
-                                          "7 (Num Pad)", "8 (Num Pad)", "9 (Num Pad)", "+",
-                                          "Caps Lock", "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", "Enter",
-                                          "4 (Num Pad)", "5 (Num Pad)", "6 (Num Pad)",
-                                          "Shift", "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/", "Shift",
-                                          "1 (Num Pad)", "2 (Num Pad)", "3 (Num Pad)", "Enter",
-                                          "Ctrl", "Win", "Alt", "Spacebar", "Alt", "Win", "Menu", "Ctrl",
-                                          "0 (Num Pad)", ". (Num Pad)" };
-            var customMessageBox = new ComboBoxPopUp(Title, "Choose key:",options);
+            Dictionary<string, Key> options = new Dictionary<string, Key>
+        {
+            {"AbntC1", Key.AbntC1},
+            {"AbntC2", Key.AbntC2},
+            {"Add", Key.Add},
+            {"Apps", Key.Apps},
+            {"Attn", Key.Attn},
+            {"B", Key.B},
+            {"Back", Key.Back},
+            {"BrowserBack", Key.BrowserBack},
+            {"BrowserFavorites", Key.BrowserFavorites},
+            {"BrowserForward", Key.BrowserForward},
+            {"BrowserHome", Key.BrowserHome},
+            {"BrowserRefresh", Key.BrowserRefresh},
+            {"BrowserSearch", Key.BrowserSearch},
+            {"BrowserStop", Key.BrowserStop},
+            {"C", Key.C},
+            {"Cancel", Key.Cancel},
+            {"Capital", Key.Capital},
+            {"CapsLock", Key.CapsLock},
+            {"Clear", Key.Clear},
+            {"CrSel", Key.CrSel},
+            {"D", Key.D},
+            {"D0", Key.D0},
+            {"D1", Key.D1},
+            {"D2", Key.D2},
+            {"D3", Key.D3},
+            {"D4", Key.D4},
+            {"D5", Key.D5},
+            {"D6", Key.D6},
+            {"D7", Key.D7},
+            {"D8", Key.D8},
+            {"D9", Key.D9},
+            {"DbeAlphanumeric", Key.DbeAlphanumeric},
+            {"DbeCodeInput", Key.DbeCodeInput},
+            {"DbeDbcsChar", Key.DbeDbcsChar},
+            {"DbeDetermineString", Key.DbeDetermineString},
+            {"DbeEnterDialogConversionMode", Key.DbeEnterDialogConversionMode},
+            {"DbeEnterImeConfigureMode", Key.DbeEnterImeConfigureMode},
+            {"DbeEnterWordRegisterMode", Key.DbeEnterWordRegisterMode},
+            {"DbeFlushString", Key.DbeFlushString},
+            {"DbeHiragana", Key.DbeHiragana},
+            {"DbeKatakana", Key.DbeKatakana},
+            {"DbeNoCodeInput", Key.DbeNoCodeInput},
+            {"DbeNoRoman", Key.DbeNoRoman},
+            {"DbeRoman", Key.DbeRoman},
+            {"DbeSbcsChar", Key.DbeSbcsChar},
+            {"DeadCharProcessed", Key.DeadCharProcessed},
+            {"Decimal", Key.Decimal},
+            {"Delete", Key.Delete},
+            {"Divide", Key.Divide},
+            {"Down", Key.Down},
+            {"E", Key.E},
+            {"End", Key.End},
+            {"Enter", Key.Enter},
+            {"EraseEof", Key.EraseEof},
+            {"Escape", Key.Escape},
+            {"Execute", Key.Execute},
+            {"ExSel", Key.ExSel},
+            {"F", Key.F},
+            {"F1", Key.F1},
+            {"F10", Key.F10},
+            {"F11", Key.F11},
+            {"F12", Key.F12},
+            {"F13", Key.F13},
+            {"F14", Key.F14},
+            {"F15", Key.F15},
+            {"F16", Key.F16},
+            {"F17", Key.F17},
+            {"F18", Key.F18},
+            {"F19", Key.F19},
+            {"F2", Key.F2},
+            {"F20", Key.F20},
+            {"F21", Key.F21},
+            {"F22", Key.F22},
+            {"F23", Key.F23},
+            {"F24", Key.F24},
+            {"F3", Key.F3},
+            {"F4", Key.F4},
+            {"F5", Key.F5},
+            {"F6", Key.F6},
+            {"F7", Key.F7},
+            {"F8", Key.F8},
+            {"F9", Key.F9},
+            {"FinalMode", Key.FinalMode},
+            {"G", Key.G},
+            {"H", Key.H},
+            {"HangulMode", Key.HangulMode},
+            {"HanjaMode", Key.HanjaMode},
+            {"Help", Key.Help},
+            {"Home", Key.Home},
+            {"I", Key.I},
+            {"ImeAccept", Key.ImeAccept},
+            {"ImeConvert", Key.ImeConvert},
+            {"ImeModeChange", Key.ImeModeChange},
+            {"ImeNonConvert", Key.ImeNonConvert},
+            {"ImeProcessed", Key.ImeProcessed},
+            {"Insert", Key.Insert},
+            {"J", Key.J},
+            {"JunjaMode", Key.JunjaMode},
+            {"K", Key.K},
+            {"KanaMode", Key.KanaMode},
+            {"KanjiMode", Key.KanjiMode},
+            {"L", Key.L},
+            {"LaunchApplication1", Key.LaunchApplication1},
+            {"LaunchApplication2", Key.LaunchApplication2},
+            {"LaunchMail", Key.LaunchMail},
+            {"Left", Key.Left},
+            {"LeftAlt", Key.LeftAlt},
+            {"LeftCtrl", Key.LeftCtrl},
+            {"LeftShift", Key.LeftShift},
+            {"LineFeed", Key.LineFeed},
+            {"LWin", Key.LWin},
+            {"M", Key.M},
+            {"MediaNextTrack", Key.MediaNextTrack},
+            {"MediaPlayPause", Key.MediaPlayPause},
+            {"MediaPreviousTrack", Key.MediaPreviousTrack},
+            {"MediaStop", Key.MediaStop},
+            {"Multiply", Key.Multiply},
+            {"N", Key.N},
+            {"Next", Key.Next},
+            {"NoName", Key.NoName},
+            {"None", Key.None},
+            {"NumLock", Key.NumLock},
+            {"NumPad0", Key.NumPad0},
+            {"NumPad1", Key.NumPad1},
+            {"NumPad2", Key.NumPad2},
+            {"NumPad3", Key.NumPad3},
+            {"NumPad4", Key.NumPad4},
+            {"NumPad5", Key.NumPad5},
+            {"NumPad6", Key.NumPad6},
+            {"NumPad7", Key.NumPad7},
+            {"NumPad8", Key.NumPad8},
+            {"NumPad9", Key.NumPad9},
+            {"O", Key.O},
+            {"Oem1", Key.Oem1},
+            {"Oem102", Key.Oem102},
+            {"Oem2", Key.Oem2},
+            {"Oem3", Key.Oem3},
+            {"Oem4", Key.Oem4},
+            {"Oem5", Key.Oem5},
+            {"Oem6", Key.Oem6},
+            {"Oem7", Key.Oem7},
+            {"Oem8", Key.Oem8},
+            {"OemAttn", Key.OemAttn},
+            {"OemAuto", Key.OemAuto},
+            {"OemBackslash", Key.OemBackslash},
+            {"OemBackTab", Key.OemBackTab},
+            {"OemClear", Key.OemClear},
+            {"OemCloseBrackets", Key.OemCloseBrackets},
+            {"OemComma", Key.OemComma},
+            {"OemCopy", Key.OemCopy},
+            {"OemEnlw", Key.OemEnlw},
+            {"OemFinish", Key.OemFinish},
+            {"OemMinus", Key.OemMinus},
+            {"OemOpenBrackets", Key.OemOpenBrackets},
+            {"OemPeriod", Key.OemPeriod},
+            {"OemPipe", Key.OemPipe},
+            {"OemPlus", Key.OemPlus},
+            {"OemQuestion", Key.OemQuestion},
+            {"OemQuotes", Key.OemQuotes},
+            {"OemSemicolon", Key.OemSemicolon},
+            {"OemTilde", Key.OemTilde},
+            {"P", Key.P},
+            {"Pa1", Key.Pa1},
+            {"PageDown", Key.PageDown},
+            {"PageUp", Key.PageUp},
+            {"Pause", Key.Pause},
+            {"Play", Key.Play},
+            {"Print", Key.Print},
+            {"PrintScreen", Key.PrintScreen},
+            {"Prior", Key.Prior},
+            {"Q", Key.Q},
+            {"R", Key.R},
+            {"Return", Key.Return},
+            {"Right", Key.Right},
+            {"RightAlt", Key.RightAlt},
+            {"RightCtrl", Key.RightCtrl},
+            {"RightShift", Key.RightShift},
+            {"RWin", Key.RWin},
+            {"S", Key.S},
+            {"Scroll", Key.Scroll},
+            {"Select", Key.Select},
+            {"SelectMedia", Key.SelectMedia},
+            {"Separator", Key.Separator},
+            {"Sleep", Key.Sleep},
+            {"Snapshot", Key.Snapshot},
+            {"Space", Key.Space},
+            {"Subtract", Key.Subtract},
+            {"System", Key.System},
+            {"T", Key.T},
+            {"Tab", Key.Tab},
+            {"U", Key.U},
+            {"Up", Key.Up},
+            {"V", Key.V},
+            {"VolumeDown", Key.VolumeDown},
+            {"VolumeMute", Key.VolumeMute},
+            {"VolumeUp", Key.VolumeUp},
+            {"W", Key.W},
+            {"X", Key.X},
+            {"Y", Key.Y},
+            {"Z", Key.Z},
+            {"Zoom", Key.Zoom}
+        };
 
-            Key key = Key.None;
+            var customMessageBox = new ComboBoxPopUp(Title, "Choose key:",options.Keys.ToArray());
+
+            string key = "";
             if (customMessageBox.ShowDialog() == true)
             {
                 var selectedOption = customMessageBox.SelectedOption;
                 Console.WriteLine($"selected option {selectedOption}");
-                Enum.TryParse(selectedOption, out key);
+                return selectedOption;
             }
             return key;
         }
@@ -182,7 +373,7 @@ namespace KQMacro
                     System.Drawing.Point NewPoint = System.Windows.Forms.Cursor.Position;
 
                     string Text = (StepType == StepType.TypeText) ? Microsoft.VisualBasic.Interaction.InputBox("Type in text: ", "Input") : null;
-                    Key Key = (StepType == StepType.ClickButton) ? ChooseKey() : Key.None;
+                    string Key = (StepType == StepType.ClickButton) ? ChooseKey() : "";
 
                     Step NewStep = new Step
                     {
@@ -208,7 +399,7 @@ namespace KQMacro
             int i = 1;
             foreach (Step step in steps)
             {
-                PointsList.Items.Add($"Step {i}: {step.Point} , {(step.Delay != 0 ? $"Delay: {step.Delay}ms" : $"{step.StepType}")} {(step.Text != null ? $", Text: {step.Text}" : "")} {(step.Button != Key.None ? $" Key: {step.Button}" : "")}");
+                PointsList.Items.Add($"Step {i}: {step.Point} , {(step.Delay != 0 ? $"Delay: {step.Delay}ms" : $"{step.StepType}")} {(step.Text != null ? $", Text: {step.Text}" : "")} {(string.IsNullOrEmpty(step.Button) ? "" : $" Key: {step.Button}")}");
                 i++;
             }
         }
@@ -251,8 +442,7 @@ namespace KQMacro
                         }
                         else if (step.StepType == StepType.ClickButton)
                         {
-                            string Key = "{" + step.Button + "}";
-                            SendKeys.SendWait(Key);
+                            SendKeys.SendWait("{"+step.Button+"}");
                         }
                         else if (step.StepType == StepType.LeftClick)
                         {
