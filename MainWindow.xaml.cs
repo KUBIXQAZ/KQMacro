@@ -12,6 +12,8 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Xml;
 using System.Windows.Media;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace KQMacro
 {
@@ -54,12 +56,14 @@ namespace KQMacro
         int Loops = 1;
         bool isMacroRunning = false;
         bool cancelMacro = false;
-        Macro macro;
+        Macro macro = new Macro();
 
         const int MOUSEEVENTF_LEFTDOWN = 0x02;
         const int MOUSEEVENTF_LEFTUP = 0x04;
         const int MOUSEEVENTF_RIGHTDOWN = 0x0008;
         const int MOUSEEVENTF_RIGHTUP = 0x0010;
+
+        bool instruction = false;
 
         public MainWindow()
         {
@@ -71,8 +75,34 @@ namespace KQMacro
 
             PointsList.SelectionChanged += SelectedItemInList;
 
-            macro =  new Macro();
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(bool));
+
+                string fileName = "settings.xml";
+
+                using (FileStream fileStream = new FileStream(fileName, FileMode.Open))
+                {
+                    instruction = (bool)serializer.Deserialize(fileStream);
+                }
+            } catch { }
+
+            if (instruction == false) ShowInstruction(null,null);
         }
+
+        public void ShowInstruction(object sender, RoutedEventArgs e)
+        {
+            System.Windows.MessageBox.Show("To begin recording, click the 'Start Recording' button. Press the 'H' key to add a new step. You can choose the type of step, such as left-click, right-click, type text, or click a button. To delete a step, click on it in the list and use the 'Delete' button. Additionally, for delay steps, you can double-click on them in the list to edit the delay duration. You can specify delays between actions and set the number of times you want the actions to be repeated by clicking on the 'Loops' button. To start and stop the macro, use the F6 key. There's also a reset button to clear all actions from the macro. Save and load your macros to/from a file for convenience.", "Info",MessageBoxButton.OK);
+            instruction = true;
+            XmlSerializer serializer = new XmlSerializer(typeof(bool));
+
+            string fileName = "settings.xml";
+
+            using (FileStream fileStream = new FileStream(fileName, FileMode.Create))
+            {
+                serializer.Serialize(fileStream, instruction);
+            }
+        }   
 
         private async void CheckForStartStop()
         {

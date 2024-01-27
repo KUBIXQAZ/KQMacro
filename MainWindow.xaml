@@ -15,9 +15,16 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid>
+        <Menu Grid.Row="0"
+              Grid.ColumnSpan="2"
+              Grid.Column="0">
+            <MenuItem Header="How to use?" Click="ShowInstruction"></MenuItem>
+        </Menu>
+        <Grid Grid.Column="0"
+              Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="10*"/>
                 <RowDefinition Height="1*"/>
@@ -39,7 +46,7 @@
             </Button>
         </Grid>
         <Grid Grid.Column="1"
-              Grid.Row="0">
+              Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
