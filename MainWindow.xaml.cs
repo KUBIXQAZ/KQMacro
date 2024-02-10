@@ -63,6 +63,10 @@ namespace KQMacro
 
         bool instruction = false;
 
+        public static string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        public static string myAppFolder = Path.Combine(appDataPath, "KUBIXQAZ/KQMacro");
+        public static string filePath = Path.Combine(myAppFolder, "settings.xml");
+
         public MainWindow()
         {
             InitializeComponent();
@@ -76,10 +80,6 @@ namespace KQMacro
             try
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(bool));
-
-                string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                string myAppFolder = Path.Combine(appDataPath, "KQMacro");
-                string filePath = Path.Combine(myAppFolder, "settings.xml");
 
                 using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
                 {
@@ -97,10 +97,6 @@ namespace KQMacro
             {
                 instruction = true;
                 XmlSerializer serializer = new XmlSerializer(typeof(bool));
-
-                string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                string myAppFolder = Path.Combine(appDataPath, "KQMacro");
-                string filePath = Path.Combine(myAppFolder, "settings.xml");
 
                 if(!Directory.Exists(myAppFolder)) Directory.CreateDirectory(myAppFolder);
 
